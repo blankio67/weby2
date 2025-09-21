@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nexin INC</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Courier New", monospace;
+      background: url("https://i.imgur.com/8T7ZP4d.png"); /* Minecraft dirt background */
+      background-size: cover;
+      color: white;
+      text-align: center;
+    }
+
+    header {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 15px;
+      text-align: left;
+    }
+
+    header button {
+      background: #2d2d2d;
+      color: white;
+      border: 2px solid #3c3c3c;
+      border-radius: 6px;
+      padding: 8px 16px;
+      margin-right: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    header button:hover {
+      background: #3c3c3c;
+    }
+
+    h1 {
+      margin-top: 50px;
+      font-size: 3em;
+      text-shadow: 3px 3px 5px black;
+    }
+
+    .content {
+      margin: 30px auto;
+      max-width: 600px;
+      background: rgba(0, 0, 0, 0.75);
+      padding: 20px;
+      border-radius: 10px;
+      display: none;
+    }
+
+    input, textarea {
+      width: 90%;
+      margin: 10px 0;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+    }
+
+    input[type="submit"] {
+      background: #2d2d2d;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background: #3c3c3c;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <button onclick="showSection('buy')">Buy</button>
+    <button onclick="showSection('request')">Request Items</button>
+  </header>
+
+  <h1>Nexin INC</h1>
+
+  <!-- Buy Section -->
+  <div id="buy" class="content">
+    <h2>Current Items For Sale</h2>
+    <p>Slime Balls – $10 per 10</p>
+    <p>Redstone – $20 per 64</p>
+    <p>Storage System Builds – $100</p>
+    <p>Elevator System – $10 per elevator</p>
+  </div>
+
+  <!-- Request Items Section -->
+  <div id="request" class="content">
+    <h2>Request an Item</h2>
+    <form id="requestForm">
+      <input type="text" name="item" placeholder="Item you want" required><br>
+      <input type="text" name="price" placeholder="Valid price" required><br>
+      <input type="submit" value="Send Request">
+    </form>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    function showSection(section) {
+      document.querySelectorAll('.content').forEach(div => div.style.display = 'none');
+      document.getElementById(section).style.display = 'block';
+    }
+
+    const form = document.getElementById('requestForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const item = form.item.value;
+      const price = form.price.value;
+
+      const payload = {
+        content: `📦 **New Item Request**\n🛒 Item: ${item}\n💵 Price: ${price}`
+      };
+
+      const status = document.getElementById('status');
+      try {
+        await fetch("https://discord.com/api/webhooks/1419113231657730051/Ub0BFxj6DM0ighCilqIT4gzUsJy8AYecN_BvjvYQz74jZjz_vj9rfFmecEPx7-O5lAi2", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        status.textContent = "✅ Request sent!";
+        form.reset();
+      } catch (err) {
+        status.textContent = "❌ Error sending request.";
+      }
+    });
+  </script>
+</body>
+</html>
